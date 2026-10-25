@@ -1,23 +1,22 @@
-# GitHub Pages Freeze Demo
+# Chrome Freeze Demo
 
-This repository intentionally contains a broken GitHub Pages setup that causes the browser to get stuck in a redirect loop.
+This repository intentionally contains a browser-breaking page. It is designed to stress CPU and memory by creating a huge number of DOM nodes, images, and blob objects in a loop.
+
+## Purpose
+
+This is only meant for learning, testing, and controlled local browser stress testing.
 
 ## Why it freezes
 
-- The page immediately redirects to itself.
-- A JavaScript timer keeps redirecting again and again.
-- The browser keeps reloading the same page forever.
-- This uses CPU and memory until Chrome becomes unresponsive.
+- A recursive animation loop keeps appending huge DOM fragments.
+- It creates many images and blob URLs every frame.
+- The browser spends all of its memory and CPU trying to render and manage the page.
+- Modern browsers may become unresponsive or stop rendering.
 
-## How to test
+## Important
 
-1. Create a GitHub repository.
-2. Push this code to the `main` branch.
-3. Go to Settings → Pages.
-4. Deploy from the `main` branch.
-5. Open the GitHub Pages URL.
-6. Chrome may freeze or become extremely slow.
+Do not run this on production machines or real browsers you care about. Use only in a disposable or isolated environment.
 
 ## Fix
 
-Remove both the meta-refresh and the JavaScript redirect loop.
+Remove the infinite render loop and the mass DOM creation code.
